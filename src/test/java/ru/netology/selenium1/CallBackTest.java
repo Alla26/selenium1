@@ -18,7 +18,6 @@ public class CallBackTest {
 
     @BeforeAll
     static void setUpAll() {
-      //  System.setProperty("webdriver.chrome.driver", "driver/win/chromedriver.exe");
         WebDriverManager.chromedriver().setup();
 
     }
@@ -30,6 +29,8 @@ public class CallBackTest {
         options.addArguments("--no-sandbox");
         options.addArguments("--headless");
         driver = new ChromeDriver(options);
+        driver.get("http://localhost:9999");
+
 
     }
 
@@ -42,14 +43,11 @@ public class CallBackTest {
 
     @Test
     public void shouldSendSuccessfully() {
-        driver.get("http://localhost:9999");
-        //  driver.findElement(By.cssSelector("[type=\"text\"]")).sendKeys("Иванов Иван");
-        driver.findElement(By.cssSelector("[view='default']")).sendKeys("Иванов Иван");
+        driver.findElement(By.cssSelector("[data-test-id=\"name\"] input")).sendKeys("Иванов-Смирнов Иван");
         driver.findElement(By.cssSelector("[type=\"tel\"]")).sendKeys("+79999999999");
-        driver.findElement(By.cssSelector(".checkbox__text")).click();
-        driver.findElement(By.cssSelector(".button__text")).click();
-        //  String text = driver.findElement(By.cssSelector("[data-test-id=order-success]")).getText();
-        String text = driver.findElement(By.className("paragraph_theme_alfa-on-white")).getText();
+        driver.findElement(By.cssSelector("[data-test-id=\"agreement\"]")).click();
+        driver.findElement(By.cssSelector("button[type='button']")).click();
+        String text = driver.findElement(By.cssSelector("[data-test-id=order-success]")).getText();
         assertEquals("Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время.", text.trim());
 
 
@@ -57,15 +55,11 @@ public class CallBackTest {
 
     @Test
     public void shouldNotSendIncorrectNameFormat() {
-        driver.get("http://localhost:9999");
-        // driver.findElement(By.cssSelector("[view='default']")).sendKeys("Ivan Ivanov");
-        driver.findElement(By.cssSelector("[type=\"text\"]")).sendKeys("Ivan Ivanov");
+        driver.findElement(By.cssSelector("[data-test-id=\"name\"] input")).sendKeys("Ivan Ivanov");
         driver.findElement(By.cssSelector("[type=\"tel\"]")).sendKeys("+79999999999");
-        // driver.findElement(By.cssSelector(".checkbox__text")).click();
         driver.findElement(By.cssSelector("[data-test-id=\"agreement\"]")).click();
-        driver.findElement(By.cssSelector("[type='button']")).click();
-        //driver.findElement(By.cssSelector(".button__text")).click();
-        String text = driver.findElement(By.cssSelector("[data-test-id='name'] .input__sub")).getText();
+        driver.findElement(By.cssSelector("button[type='button']")).click();
+        String text = driver.findElement(By.cssSelector("[data-test-id='name'].input_invalid .input__sub")).getText();
         assertEquals("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы.", text.trim());
 
 
@@ -73,12 +67,11 @@ public class CallBackTest {
 
     @Test
     public void shouldNotSendEmptyName() {
-        driver.get("http://localhost:9999");
-        driver.findElement(By.cssSelector("[view='default']")).sendKeys("");
+        driver.findElement(By.cssSelector("[data-test-id=\"name\"] input")).sendKeys("");
         driver.findElement(By.cssSelector("[type=\"tel\"]")).sendKeys("+79999999999");
-        driver.findElement(By.cssSelector(".checkbox__text")).click();
-        driver.findElement(By.cssSelector(".button__text")).click();
-        String text = driver.findElement(By.cssSelector("[data-test-id='name'] span.input__sub")).getText();
+        driver.findElement(By.cssSelector("[data-test-id=\"agreement\"]")).click();
+        driver.findElement(By.cssSelector("button[type='button']")).click();
+        String text = driver.findElement(By.cssSelector("[data-test-id='name'].input_invalid span.input__sub")).getText();
         assertEquals("Поле обязательно для заполнения", text.trim());
 
 
@@ -86,12 +79,11 @@ public class CallBackTest {
 
     @Test
     public void shouldNotSendIncorrectTelephoneFormat() {
-        driver.get("http://localhost:9999");
-        driver.findElement(By.cssSelector("[view='default']")).sendKeys("Иванов Иван");
+        driver.findElement(By.cssSelector("[data-test-id=\"name\"] input")).sendKeys("Иванов Иван");
         driver.findElement(By.cssSelector("[type=\"tel\"]")).sendKeys("9999999999");
-        driver.findElement(By.cssSelector(".checkbox__text")).click();
-        driver.findElement(By.cssSelector(".button__text")).click();
-        String text = driver.findElement(By.cssSelector("[data-test-id='phone'] span.input__sub")).getText();
+        driver.findElement(By.cssSelector("[data-test-id=\"agreement\"]")).click();
+        driver.findElement(By.cssSelector("button[type='button']")).click();
+        String text = driver.findElement(By.cssSelector("[data-test-id='phone'].input_invalid span.input__sub")).getText();
         assertEquals("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.", text.trim());
 
 
@@ -99,12 +91,11 @@ public class CallBackTest {
 
     @Test
     public void shouldNotSendEmptyTelephone() {
-        driver.get("http://localhost:9999");
-        driver.findElement(By.cssSelector("[view='default']")).sendKeys("Иванов Иван");
+        driver.findElement(By.cssSelector("[data-test-id=\"name\"] input")).sendKeys("Иванов Иван");
         driver.findElement(By.cssSelector("[type=\"tel\"]")).sendKeys("");
-        driver.findElement(By.cssSelector(".checkbox__text")).click();
-        driver.findElement(By.cssSelector(".button__text")).click();
-        String text = driver.findElement(By.cssSelector("[data-test-id='phone'] .input__sub")).getText();
+        driver.findElement(By.cssSelector("[data-test-id=\"agreement\"]")).click();
+        driver.findElement(By.cssSelector("button[type='button']")).click();
+        String text = driver.findElement(By.cssSelector("[data-test-id='phone'].input_invalid .input__sub")).getText();
         assertEquals("Поле обязательно для заполнения", text.trim());
 
 
@@ -112,12 +103,10 @@ public class CallBackTest {
 
     @Test
     public void shouldNotSendCheckboxIsNotPressed() {
-        driver.get("http://localhost:9999");
-        driver.findElement(By.cssSelector("[type=\"text\"]")).sendKeys("Иван Иванов");
+        driver.findElement(By.cssSelector("[data-test-id=\"name\"] input")).sendKeys("Иван Иванов");
         driver.findElement(By.cssSelector("[type=\"tel\"]")).sendKeys("+79999999999");
-        //driver.findElement(By.cssSelector("[data-test-id=\"agreement\"]")).click();
-        driver.findElement(By.cssSelector("[type='button']")).click();
-        String text = driver.findElement(By.cssSelector("[data-test-id='agreement'] .checkbox__text")).getText();
+        driver.findElement(By.cssSelector("button[type='button']")).click();
+        String text = driver.findElement(By.cssSelector("[data-test-id='agreement'].input_invalid .checkbox__text")).getText();
         assertEquals("Я соглашаюсь с условиями обработки и использования моих персональных данных и разрешаю сделать запрос в бюро кредитных историй", text.trim());
 
 
